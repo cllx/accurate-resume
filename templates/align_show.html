@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>对齐结果展示</title>
+	<script type="text/javascript" src="/static/echarts-4.1.0/echarts.js"></script>
+</head>
+<body>
+    <div id="main" style="width: 1000px;height:800px;">
+		{% if align_json %}
+			{% for key in align_json.keys() %}
+				{% if not align_json[key].keys() %}
+					{% for res in align_json[key] %}
+						<p>{{key}}：{{ res }}</p>
+					{% endfor %}
+				{% else %}
+					{% for new_key in align_json[key].keys() %}
+						{% if not align_json[key][new_key].keys() %}
+							{% for res in align_json[key][new_key] %}
+								<p>{{key}}——{{new_key}}：{{ res }}</p>
+							{% endfor %}
+						{% else %}
+							{% for new_key1 in align_json[key][new_key].keys() %}
+									{% for res in align_json[key][new_key][new_key1] %}
+										<p>{{key}}——{{new_key}}——{{new_key1}}：{{ res }}</p>
+									{% endfor %}
+							{% endfor %}
+						{% endif %}
+					{% endfor %}
+				{% endif %}
+			{% endfor %}
+		{% else %}
+			<p>暂时还未有该院士的对齐处理结果</p>
+		{% endif %}
+			
+	</div>
+	
+</body>
+</html>

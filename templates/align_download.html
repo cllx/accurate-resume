@@ -1,0 +1,20 @@
+<!-- templates/login.html -->
+
+<DOCTYPE html>
+<html lang="utf-8">
+<head>
+    <title>中间处理结果查看</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--<link href="css/style.css" rel="stylesheet">-->
+</head>
+<body>
+    <form method="post" action='/align'>
+        <label>对齐处理结果查看：<input type="text" name="filename" value=""></label><br>
+        <input type="submit" value="查看">
+    </form>
+	{% if path %}
+	    {{path}}
+	{% endif %}
+</body>
+</html>

@@ -1,0 +1,273 @@
+<html>
+   <head>
+	   <meta charset="utf-8"></meta>
+	   <title>精准简历系统</title>
+       <style type="text/css">
+        .top{
+			/* 设置宽度高度背景颜色 */
+			height: auto; /*高度改为自动高度*/
+			width:100%;
+			left: 0;
+			background:rgb(18, 181, 181);
+			position: fixed; /*固定在顶部*/
+			top: 0;/*离顶部的距离为0*/
+			margin-bottom: 5px;
+		}
+		.top ul{
+			/* 清除ul标签的默认样式 */
+			width: auto;/*宽度也改为自动*/
+			list-style-type: none;
+			white-space:nowrap;
+			overflow: hidden;
+			margin-left: 5%;
+			/* margin-top: 0;          */
+			padding: 0;
+
+		}
+		.top li {
+			float:left; /* 使li内容横向浮动，即横向排列  */
+			margin-right:2%;  /* 两个li之间的距离*/
+			position: relative;
+			overflow: hidden;
+		}
+
+		.top li a{
+		   /* 设置链接内容显示的格式*/
+			display: block; /* 把链接显示为块元素可使整个链接区域可点击 */
+			color:white;
+			text-align: center;
+			padding: 3px;
+			overflow: hidden;
+			text-decoration: none; /* 去除下划线 */
+			
+		}
+		.top li a:hover{
+			/* 鼠标选中时背景变为黑色 */
+			background-color: #111;
+		}
+		.top ul li ul{
+			/* 设置二级菜单 */
+			margin-left: -0.2px;
+			background:rgb(189, 181, 181);
+			position: relative;
+			display: none; /* 默认隐藏二级菜单的内容 */
+
+		}
+		.top ul li ul li{
+			/* 二级菜单li内容的显示 */
+			
+			float:none;
+			text-align: center;
+		}
+		.top ul li:hover ul{
+			/* 鼠标选中二级菜单内容时 */
+			display: block;
+		}
+		body{
+			background:#ffffff;
+		}
+		.right{
+			/*border: 1px solid red;*/
+			border-right:2px solid #0099FF;
+            width: 1010px;
+            height: auto;
+            position: relative;
+            left: -9px;
+            bottom: 200px;
+			top: 50px;
+		}
+		.right ul li{
+			width: auto;
+            height: auto;
+            position: relative;
+            left: -20px;
+			top: 2px;
+			list-style-type:none;
+		}
+		.right ul li a{
+			text-decoration:none;
+			color: #000000;
+		}
+		.middle{
+			/*border:2px solid #0099FF;*/
+            width: 500px;
+            height: 50px;
+            position: absolute;
+            left: 158px;
+            bottom: 200px;
+			top: 90px;
+		}
+		.bottom{
+			/*border:2px solid #0099FF;*/
+            width: 500px;
+            height: 50px;
+            position: absolute;
+            left: 758px;
+            bottom: 200px;
+			top: 90px;
+		}
+       </style>
+	   <script type="text/javascript" src="/static/echarts-4.1.0/echarts.js"></script>
+	</head>
+        <body>
+            <div class="top">
+				<center> 
+					<ul>
+						<li><a href="/get_single_page"><b>精准简历系统</b></a></li>
+						<li><a href="/get_haved_yuanshi"><b>查看已有简历</b></a></li>
+						<li><a href="/get_new_yuanshi"><b>生成新的简历</b></a></li>
+						<li><a href="{{ url_for('align', filename=filename) }}"><b>对齐查看</b></a></li>
+						<li><a href="{{ url_for('xiaoqi', filename=filename) }}"><b>消歧查看</b></a></li>
+						<li><a href="{{ url_for('transe_generate_deal_csv', filename=filename) }}"><b>TransE查看</b></a></li>
+						<li><a href="{{ url_for('get_all_yuanshi') }}"><b>查看所有图谱</b></a></li>
+					</ul>
+				</center>
+            </div>
+			<div class="right">
+				{% if haved_yuanshi %}
+					{% for filename in haved_yuanshi %}
+						<ul>
+							<li><a href="{{ url_for('single_info2', filename=filename['姓名']) }}">{{filename}}</a></li>
+						</ul>
+					{% endfor %}
+				{% else %}
+					<ul>
+						<li><a href="{{ url_for('single_info2', filename=filename['姓名']) }}">{{filename}}</a></li>
+					</ul>
+				{% endif %}
+			</div>
+			
+			<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+			{% if yuanshi_info %}
+				<div id="main" style="width:1090px;height:800px;border:2px solid #C0C0C0;position:relative;left:150px;top:105px;"></div>
+				<script type="text/javascript">
+				  // 基于准备好的dom，初始化echarts实例
+				  var myChart = echarts.init(document.getElementById('main'));
+				  //准备好数据
+				  //以下为节点数据，每一个{}里面为一个节点，category（该节点类别），name（关系连接的关键字，可以理解为键值中的键，可为数字）
+				  //value(节点的值，可以设置节点半径与该值的关系)，label（该字段是我用来显示该节点标签的，可以改名），大家也可以自己设置其他字段
+				  var graph = {};//数据
+				  //var test_json = {{ yuanshi_info|tojson}}
+				  var test_json = {{yuanshi_info|safe}};
+				  var list_node = new Array();
+				  var list_link = new Array();
+				  test_json.node.map(function (node){
+					var dic = {};
+					dic['category'] = node.category;
+					dic['name'] = node.name;
+					dic['value'] = node.value;
+					dic['label'] = node.label;
+					list_node.push(dic);
+				});
+				graph.nodes = list_node;
+				  //以下为连线关系数据，每一个{}里面为一个关系，source（起点，对应上面的name），target（终点，对应上面的name）
+				  //value(起点到终点的距离，值越大，权重越大，距离越短)
+				  test_json.link.map(function (link){
+					var dic = {};
+					dic['source'] = link.source;
+					dic['target'] = link.target;
+					dic['value'] = link.value;
+					dic['label'] = link.label;
+					list_link.push(dic);
+				  });
+				  graph.links = list_link;
+				  //categories为node节点分类，categoriesshort为显示图例，后者比前者短，可以使得图例中没有主干人物
+				  graph.categories = [{name:'主干人物'},{name:'家人'},{name:'朋友'}];
+				  graph.categoriesshort = [{name:'家人'},{name:'朋友'}];
+				  // 设置关系图节点标记的大小
+				  graph.nodes.forEach(function (node) {
+					node.symbolSize = node.value*6;
+				});
+				  var option = {
+				  title: {
+					text: '院士简历信息图',//标题
+					top: 'top',//相对在y轴上的位置
+					left: 'center'//相对在x轴上的位置
+				  },
+				  tooltip: {//提示框，鼠标悬浮交互时的信息提示
+					trigger: 'item',//数据触发类型
+					formatter: function(params){//触发之后返回的参数，这个函数是关键
+					  console.log(params);
+					  if (params.data.category !=undefined) {//如果触发节点
+						return '实体:'+params.data.label;//返回标签
+					  }else {//如果触发边
+						return '实体关系:'+params.data.label;
+					  }
+					},
+				  },
+				  //工具箱，每个图表最多仅有一个工具箱
+				  toolbox: {
+					show: true,
+					feature: {
+					  dataView: {show: true, readOnly: true},
+					  restore: {show: true},//restore，还原，复位原始图表
+					  saveAsImage: {show: true}//saveAsImage，保存图
+					}
+				  },
+				  //全局颜色，图例、节点、边的颜色都是从这里取，按照之前划分的种类依序选取
+				  color:['rgb(194,53,49)','rgb(178,144,137)','rgb(97,160,168)','rgb(15,66,127)','rgb(200,9,86)','rgb(90,192,167)'],
+				  //sereis的数据: 用于设置图表数据之用
+				  series: [
+					{
+					  name: '人际关系网络图',//系列名称
+					  type: 'graph',//图表类型
+					  layout: 'force',//echarts3的变化，force是力向图，circular是和弦图
+					  draggable: true,//指示节点是否可以拖动
+					  data: graph.nodes,//节点数据
+					  links: graph.links,//边、联系数据
+					  categories: graph.categories,//节点种类
+					  focusNodeAdjacency:true,//当鼠标移动到节点上，突出显示节点以及节点的边和邻接节点
+					  roam: true,//是否开启鼠标缩放和平移漫游。默认不开启。如果只想要开启缩放或者平移，可以设置成 'scale' 或者 'move'。设置成 true 为都开启
+					  label: {//图形上的文本标签，可用于说明图形的一些数据信息
+						normal: {
+						  show: true,//显示
+						  position: 'right',//相对于节点标签的位置
+						  //回调函数，你期望节点标签上显示什么
+						  formatter: function(params){
+							return params.data.label;
+						  },
+						}
+					  },
+					  //节点的style
+					  itemStyle:{
+						normal:{
+						  opacity:0.9,//设置透明度为0.8，为0时不绘制
+						},
+					  },
+					  // 关系边的公用线条样式
+					  lineStyle: {
+						normal: {
+						  show: true,
+						  color: 'target',//决定边的颜色是与起点相同还是与终点相同
+						  curveness: 0.3//边的曲度，支持从 0 到 1 的值，值越大曲度越大。
+						}
+					  },
+					  force: {
+						edgeLength: [100,200],//线的长度，这个距离也会受 repulsion，支持设置成数组表达边长的范围
+						repulsion: 100//节点之间的斥力因子。值越大则斥力越大
+					  }
+					}
+				  ]
+				};
+				myChart.setOption(option);
+				</script>
+			{% elif haved_yuanshi or transe_res%}
+				<span>
+			{% else %}
+				<p style="position:relative;left:150px;">数据库中无相关信息</p>
+			{% endif %}
+			{% if tips and transe_res%}
+				<div id="main" style="width:1090px;height:800px;border:2px solid #C0C0C0;position:relative;left:150px;top:105px;">
+					<p>正在训练，请耐心等待...<p>
+					<img src={{transe_res}} height="500px" width="500px"/>
+				</div>
+			{% elif tips or transe_res%}
+				<div id="main" style="width:1090px;height:800px;border:2px solid #C0C0C0;position:relative;left:150px;top:105px;">
+					<p>已有训练好的内容，降维后的图如图所示:<p>
+					<img src={{transe_res}} height="500px" width="500px"/>
+				</div>
+			{% else %}
+				<br>
+			{% endif %}
+        </body>
+</html>

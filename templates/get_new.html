@@ -1,0 +1,104 @@
+<DOCTYPE html>
+<html lang="utf-8">
+<head>
+    <title>生成院士简历</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<style type="text/css">
+	#top{width:100%;height:50px;position:fixed;top:0;border:1px solid black;}
+	#txt1{display:block;width:400px;height:30px;margin:0 90px;}
+	.top{
+		/* 设置宽度高度背景颜色 */
+		height: auto; /*高度改为自动高度*/
+		width:100%;
+		margin-left: 0;
+		background:rgb(189, 181, 181);
+		position: fixed; /*固定在顶部*/
+		top: 0;/*离顶部的距离为0*/
+		margin-bottom: 5px;
+		opacity:0.8;
+		margin:0;
+		padding:0;
+	}
+	.top ul{
+		/* 清除ul标签的默认样式 */
+		width: auto;/*宽度也改为自动*/
+		list-style-type: none;
+		white-space:nowrap;
+		overflow: hidden;
+		margin-left: 5%;
+		/* margin-top: 0;          */
+		padding: 0;
+
+	}
+	.top li {
+		float:left; /* 使li内容横向浮动，即横向排列  */
+		margin-right:2%;  /* 两个li之间的距离*/
+		position: relative;
+		overflow: hidden;
+	}
+
+	.top li a{
+	   /* 设置链接内容显示的格式*/
+		display: block; /* 把链接显示为块元素可使整个链接区域可点击 */
+		color:white;
+		text-align: center;
+		padding: 3px;
+		overflow: hidden;
+		text-decoration: none; /* 去除下划线 */
+		
+	}
+	.top li a:hover{
+		/* 鼠标选中时背景变为黑色 */
+		background-color: #111;
+	}
+	.top ul li ul{
+		/* 设置二级菜单 */
+		margin-left: -0.2px;
+		background:rgb(189, 181, 181);
+		position: relative;
+		display: none; /* 默认隐藏二级菜单的内容 */
+
+	}
+	.top ul li ul li{
+		/* 二级菜单li内容的显示 */
+		
+		float:none;
+		text-align: center;
+	}
+	.top ul li:hover ul{
+		/* 鼠标选中二级菜单内容时 */
+		display: block;
+	}
+
+	</style>
+</head>
+<body background="static/img/2.png" style="background-size:100% 100%;background-repeat:no-repeat;margin:0;padding:0;">
+	<div class="top">
+	   <center> 
+		<ul>
+		<li><a href="/get_single_page">精准简历生成系统</a></li>
+		<li><a href="/get_new_yuanshi">生成新的简历</a></li>
+		<li><a href="#"></a></li>
+		<li><a href="#"><b></b></a></li>
+		<li><a href="#"></a></li>
+		<li>
+			<a href="#"></a>
+			<ul>
+				<li><a href="#"></a></li>
+				<li><a href="#"></a></li>
+			</ul>
+		</li>        
+		  </ul>
+		</center>      
+	</div>
+	<p style="position:relative;top:230px;left:0px;text-align:center;font-size:20px;color:white;letter-spacing:15px;"><b>生成简历信息</b></p>
+    <form method="post" action='/generate_resume'>
+        <label><input type="text" name="filename" value="" style="width:300px;height:30px;position:relative;top:230px;left:515px;">
+		<input type="submit" value="点击生成简历" style="width:95px;height:30px;position:relative;top:230px;left:515px;"></label><br>
+    </form>
+	{% if path %}
+	    {{path}}
+	{% endif %}
+</body>
+</html>

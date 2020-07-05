@@ -1,0 +1,56 @@
+<DOCTYPE html>
+<html lang="utf-8">
+<head>
+    <title>查询院士之间的关系</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--<link href="css/style.css" rel="stylesheet">-->
+</head>
+<body>
+    <form method="post" action='/get_attribute'>
+        <label>输入要查看的院士名：<input type="text" name="filename" value="">的
+			<select name="attribute">
+				<option value="任职">任职</option>
+				<option value="任免_辞职">任免_辞职</option>
+				<option value="本科">本科</option>
+				<option value="硕士研究生">硕士研究生</option>
+				<option value="学术兼职">学术兼职</option>
+				<option value="博士后">博士后</option>
+				<option value="博士研究生">博士研究生</option>
+				<option value="社会兼职">社会兼职</option>
+				<option value="技术工作兼职">技术工作兼职</option>
+				<option value="原籍">原籍</option>
+				<option value="主要成就">主要成就</option>
+				<option value="代表作品">代表作品</option>
+				<option value="学术报告">学术报告</option>
+				<option value="政治面貌">政治面貌</option>
+				<option value="性别">性别</option>
+				<option value="民族">民族</option>
+				<option value="职业">职业</option>
+				<option value="出生日期">出生日期</option>
+				<option value="研究成果名称">研究成果名称</option>
+				<option value="国籍">国籍</option>
+				<option value="出生地">出生地</option>
+				<option value="毕业院校">毕业院校</option>
+				<option value="授予奖项名称">授予奖项名称</option>
+				<option value="信仰">信仰</option>
+				<option value="曾任职">曾任职</option>
+				<option value="方向">方向</option>
+				<option value="论著名称">论著名称</option>
+				<option value="项目名称">项目名称</option>
+				<option value="授予奖项名称">授予奖项名称</option>
+				<option value="指导学生">指导学生</option>
+				<option value="教育理念">教育理念</option>
+				<option value="外文名">外文名</option>
+				<option value="中文名">中文名</option>
+			</select>
+		<input type="submit" value="查询"></label><br>
+    </form>
+	<form method="post" action='/get_relation'>
+		<label><input type="text" name="filename1" value="">与<input type="text" name="filename2" value=""><input type="submit" value="关系查询"></label><br>
+	</form>
+	{% if path %}
+	    {{path}}
+	{% endif %}
+</body>
+</html>

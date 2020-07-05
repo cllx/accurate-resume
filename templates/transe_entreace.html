@@ -1,0 +1,26 @@
+<!-- templates/login.html -->
+
+<DOCTYPE html>
+<html lang="utf-8">
+<head>
+    <title>TransE处理结果查看</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--<link href="css/style.css" rel="stylesheet">-->
+</head>
+<body>
+    <form method="post" action='/transe_generate_deal_csv'>
+        <label>TransE处理结果查看：<input type="text" name="filename" value=""></label><br>
+        <input type="submit" value="查看">
+    </form>
+	{% if transe_res and tips %}
+	    <p>无训练好的内容，需要训练，等待时间较长，降维后的图如图所示:</p>
+		<img src={{transe_res}}/>
+	{% elif transe_res or tips %}
+		<p>已有训练好的内容，降维后的图如图所示:</p>
+		<img src={{transe_res}} height="400" width="400"/>
+	{% else %}
+		<p>点击按钮开始查找或训练</p>
+	{% endif %}
+</body>
+</html>
